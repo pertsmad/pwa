@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>ثبت ساعت کاری</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header><h1>ثبت ساعت کاری</h1></header>
+  <main>
+
+    <section id="tab-today" class="tab active">
+      <div class="card">
+        <form id="entryForm">
+          <div class="field">
+            <label>تاریخ (شمسی)</label>
+            <div class="jalali-row">
+              <select id="jDay" aria-label="روز"></select>
+              <select id="jMonth" aria-label="ماه"></select>
+              <select id="jYear" aria-label="سال"></select>
+              <button type="button" id="todayBtn" class="btn-today">امروز</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>نوع بازه</label>
+            <div class="type-toggle" id="typeToggle">
+              <button type="button" class="type-btn active" data-type="work">کاری</button>
+              <button type="button" class="type-btn" data-type="leave">مرخصی</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="startInput">از ساعت</label>
+              <input type="time" id="startInput" required>
+            </div>
+            <div class="field">
+              <label for="endInput">تا ساعت</label>
+              <input type="time" id="endInput" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">افزودن بازه</button>
+          <p id="formMsg" class="msg"></p>
+        </form>
+      </div>
+      <div class="card">
+        <h2>بازه‌های روز <span id="listDateLabel"></span></h2>
+        <ul id="rangeList" class="range-list"></ul>
+        <div class="day-total">
+          <span>جمع ساعت کاری</span>
+          <strong id="dayWorkTotal" class="work-total">0:00</strong>
+        </div>
+        <div class="day-total">
+          <span>جمع ساعت مرخصی</span>
+          <strong id="dayLeaveTotal" class="leave-total">0:00</strong>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-month" class="tab">
+      <div class="card">
+        <div class="month-nav">
+          <button id="prevMonth" class="btn-nav" aria-label="ماه قبل">&#8250;</button>
+          <h2 id="monthLabel"></h2>
+          <button id="nextMonth" class="btn-nav" aria-label="ماه بعد">&#8249;</button>
+        </div>
+        <ul id="monthList" class="month-list"></ul>
+        <div class="day-total">
+          <span>جمع ساعت کاری</span>
+          <strong id="monthWorkTotal" class="work-total">0:00</strong>
+        </div>
+        <div class="day-total">
+          <span>جمع ساعت مرخصی</span>
+          <strong id="monthLeaveTotal" class="leave-total">0:00</strong>
+        </div>
+        <p id="leaveDaysInfo" class="leave-days-info"></p>
+        <div class="export-row">
+          <button id="exportExcel" class="btn-export" type="button">خروجی اکسل</button>
+          <button id="exportWord" class="btn-export" type="button">خروجی ورد</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-tasks" class="tab">
+      <div class="card">
+        <form id="taskForm">
+          <div class="field">
+            <label for="taskTitle">عنوان وظیفه</label>
+            <input type="text" id="taskTitle" required>
+          </div>
+          <div class="field">
+            <label for="taskDesc">توضیحات (اختیاری)</label>
+            <textarea id="taskDesc" rows="2"></textarea>
+          </div>
+          <div class="field">
+            <label for="taskDue">تاریخ سررسید (شمسی)</label>
+            <div class="jalali-row">
+              <select id="taskDay" aria-label="روز"></select>
+              <select id="taskMonth" aria-label="ماه"></select>
+              <select id="taskYear" aria-label="سال"></select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="taskPriority">اولویت</label>
+            <select id="taskPriority">
+              <option value="low">کم</option>
+              <option value="medium" selected>متوسط</option>
+              <option value="high">بالا</option>
+              <option value="critical">بحرانی</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="taskTags">برچسب‌ها (با کاما جدا کنید)</label>
+            <input type="text" id="taskTags">
+          </div>
+          <button type="submit" class="btn-primary">افزودن وظیفه</button>
+          <p id="taskMsg" class="msg"></p>
+        </form>
+      </div>
+      <div class="card">
+        <h2>فهرست وظایف</h2>
+        <div class="task-filters">
+          <select id="filterStatus" aria-label="وضعیت">
+            <option value="all">همه</option>
+            <option value="pending">در حال انجام</option>
+            <option value="done">تکمیل‌شده</option>
+            <option value="deferred">به تعویق افتاده</option>
+          </select>
+          <select id="filterPriority" aria-label="اولویت">
+            <option value="all">همه</option>
+            <option value="low">کم</option>
+            <option value="medium">متوسط</option>
+            <option value="high">بالا</option>
+            <option value="critical">بحرانی</option>
+          </select>
+          <select id="filterTag" aria-label="برچسب">
+            <option value="all">همه</option>
+          </select>
+          <select id="sortBy" aria-label="مرتب‌سازی">
+            <option value="due">سررسید</option>
+            <option value="priority">اولویت</option>
+            <option value="created">تاریخ ایجاد</option>
+          </select>
+          <select id="sortDir" aria-label="ترتیب">
+            <option value="asc">صعودی</option>
+            <option value="desc">نزولی</option>
+          </select>
+        </div>
+        <div id="taskList"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="today">امروز</button>
+    <button class="nav-btn" data-tab="month">خلاصه ماه</button>
+    <button class="nav-btn" data-tab="tasks">وظایف</button>
+  </nav>
+
+  <script src="app.js"></script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('service-worker.js').catch(function(){});
+    });
+  }
+  </script>
+  </div>
+</body>
+</html>
